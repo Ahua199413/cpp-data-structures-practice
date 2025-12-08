@@ -37,8 +37,9 @@ void DynamicArray::pop_back()
 
 int DynamicArray::get(int index) const
 {
-    if (index < 0 || index >= length)
-        throw std::out_of_range("Index error");
+    if (index < 0 || index >= length) // 如果越界，拋出標準 C++ 錯誤
+        throw std::out_of_range("Index error: Index out of bounds.");
+    return data[index];
 }
 void DynamicArray::set(int index, int value)
 {
