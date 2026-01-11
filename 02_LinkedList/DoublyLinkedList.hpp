@@ -16,10 +16,10 @@ struct Node
 };
 
 // ==========================================================
-// 2. 鏈結串列 (LinkedList) 類別
+// 2. 鏈結串列 (DoublyLinkedList) 類別
 // ==========================================================
 template <typename T>
-class LinkedList
+class DoublyLinkedList
 {
 private:
     Node<T> *head_;
@@ -42,16 +42,16 @@ private:
 
 public:
     // 構造函式
-    LinkedList() : head_(nullptr), tail_(nullptr), size_(0) {}
+    DoublyLinkedList() : head_(nullptr), tail_(nullptr), size_(0) {}
 
     // 析構函式
-    ~LinkedList()
+    ~DoublyLinkedList()
     {
         clear_internal();
     }
 
     // 複製構造函式 (Deep Copy)
-    LinkedList(const LinkedList &other) : head_(nullptr), size_(0)
+    DoublyLinkedList(const DoublyLinkedList &other) : head_(nullptr), size_(0)
     {
         if (other.head_ == nullptr)
             return;
@@ -72,12 +72,12 @@ public:
     }
 
     // 複製賦值運算符 (Copy-and-Swap idiom)
-    LinkedList &operator=(const LinkedList &other)
+    DoublyLinkedList &operator=(const DoublyLinkedList &other)
     {
         if (this != &other)
         {
             // 1. 建立副本
-            LinkedList temp(other);
+            DoublyLinkedList temp(other);
             // 2. 交換內容
             std::swap(this->head_, temp.head_);
             std::swap(this->size_, temp.size_);
@@ -100,6 +100,7 @@ public:
         else
         {
             newNode->next = head_;
+            head_->prev = newNode;
             head_ = newNode;
         }
         size_++;
@@ -111,16 +112,13 @@ public:
         Node<T> *newNode = new Node<T>(data);
         if (isEmpty())
         {
-            head_ = newNode;
+            head_ = tail_ = newNode;
         }
         else
         {
-            Node<T> *current = head_;
-            while (current->next)
-            {
-                current = current->next;
-            }
-            current->next = newNode;
+            newNode->prev = tail_;
+            tail_->next = newNode;
+            tail_ = newNode;
         }
         size_++;
     }
@@ -185,4 +183,17 @@ public:
     bool isEmpty() const { return head_ == nullptr; }
 
     size_t getSize() const { return size_; }
+
+    // 為了展示雙向性，我們加一個「反向獲取」的邏輯
+    const T &get_from_back(size_t index_from_tail) const
+    {
+        if (index_from_tail >= size_)
+            throw std::out_of_range("Index out of bounds");
+        Node<T> *current = tail_;
+        for (size_t i = 0; i < index_from_tail; ++i)
+        {
+            current = current->prev; // 往回走！
+        }
+        return current->data;
+    }
 };
