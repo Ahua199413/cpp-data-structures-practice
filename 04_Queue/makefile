@@ -1,16 +1,16 @@
-# 02_LinkedList/Makefile
+# 04_Queue/Makefile
 
 # 包含共用的編譯選項和變數
 include ../common.mk
 
 # 專案特定設定
-TARGET = linked_list_test
+TARGET = Queue_test
 SRCS = main.cpp
 OBJS = main.o
 
 # 依賴的標頭檔 (當這些檔案變動時，需要重新編譯)
-# LinkedList.hpp 在當前目錄，TestFramework.h 在上層目錄
-HEADERS = LinkedList.hpp ../TestFramework.h
+# Queue.hpp 在當前目錄，TestFramework.h 在上層目錄
+HEADERS = Queue.hpp ../TestFramework.h
 
 # 預設目標
 all: $(TARGET)
