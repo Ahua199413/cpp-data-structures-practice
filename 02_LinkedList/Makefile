@@ -4,10 +4,9 @@
 include ../common.mk
 
 # 專案特定設定
-TARGET = dynamic_array_test
-SRCS = main.cpp DynamicArray.cpp
-OBJS = $(SRCS:.cpp=.o)
-
+TARGET = linked_list_test
+SRCS = main.cpp
+OBJS = main.o
 
 # 依賴的標頭檔 (當這些檔案變動時，需要重新編譯)
 # LinkedList.hpp 在當前目錄，TestFramework.h 在上層目錄
