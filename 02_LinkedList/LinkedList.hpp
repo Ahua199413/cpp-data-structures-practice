@@ -22,6 +22,7 @@ class LinkedList
 {
 private:
     Node<T> *head_;
+    Node<T> *tail_;
     size_t size_;
 
     // 內部輔助函式：清理所有節點
@@ -40,7 +41,7 @@ private:
 
 public:
     // 構造函式
-    LinkedList() : head_(nullptr), size_(0) {}
+    LinkedList() : head_(nullptr), tail_(nullptr), size_(0) {}
 
     // 析構函式
     ~LinkedList()
@@ -90,8 +91,16 @@ public:
     void push_front(const T &data)
     {
         Node<T> *newNode = new Node<T>(data);
-        newNode->next = head_;
-        head_ = newNode;
+        if (isEmpty())
+        {
+            head_ = newNode;
+            tail_ = head_;
+        }
+        else
+        {
+            newNode->next = head_;
+            head_ = newNode;
+        }
         size_++;
     }
 
@@ -124,8 +133,13 @@ public:
         Node<T> *temp = head_;
         T val = head_->data;
         head_ = head_->next;
+
         delete temp;
         size_--;
+
+        if (isEmpty())
+            tail_ = nullptr;
+
         return val;
     }
 
