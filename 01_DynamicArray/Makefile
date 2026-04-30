@@ -10,8 +10,8 @@ OBJS = $(SRCS:.cpp=.o)
 
 
 # 依賴的標頭檔 (當這些檔案變動時，需要重新編譯)
-# LinkedList.hpp 在當前目錄，TestFramework.h 在上層目錄
-HEADERS = LinkedList.hpp ../TestFramework.h
+# DynamicArray.hpp 在當前目錄
+HEADERS = DynamicArray.hpp
 
 # 預設目標
 all: $(TARGET)
