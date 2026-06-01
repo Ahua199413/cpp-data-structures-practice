@@ -47,11 +47,37 @@ TEST_EQUAL(0, arr.get(0), "First value after resize");
 TEST_EQUAL(57, arr.get(19), "Last value after resize");
 END_SUITE
 
+TEST_SUITE(DynamicArray_Copy_Test)
+DynamicArray original;
+original.push_back(10);
+original.push_back(20);
+
+// Test Copy Constructor
+DynamicArray copy_construct(original);
+TEST_EQUAL(2, copy_construct.size(), "Copied array size check");
+TEST_EQUAL(10, copy_construct.get(0), "Copied array element 0");
+TEST_EQUAL(20, copy_construct.get(1), "Copied array element 1");
+
+copy_construct.set(0, 99);
+TEST_EQUAL(10, original.get(0), "Deep copy modification isolation check");
+
+// Test Copy Assignment
+DynamicArray copy_assign;
+copy_assign = original;
+TEST_EQUAL(2, copy_assign.size(), "Assigned array size check");
+TEST_EQUAL(10, copy_assign.get(0), "Assigned array element 0");
+TEST_EQUAL(20, copy_assign.get(1), "Assigned array element 1");
+
+copy_assign.set(0, 88);
+TEST_EQUAL(10, original.get(0), "Deep copy assignment isolation check");
+END_SUITE
+
 void run_all_tests()
 {
     DynamicArray_Core_Logic_Test();
     DynamicArray_Edge_Cases_Test();
     DynamicArray_Resize_Test();
+    DynamicArray_Copy_Test();
 }
 
 int main()

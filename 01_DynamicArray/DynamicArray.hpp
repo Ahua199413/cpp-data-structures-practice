@@ -14,6 +14,11 @@ public:
     DynamicArray();
     ~DynamicArray();
 
+    // Copy constructor
+    DynamicArray(const DynamicArray &other);
+    // Copy assignment operator
+    DynamicArray &operator=(const DynamicArray &other);
+
     void push_back(int value);
     void pop_back();
     int get(int index) const;

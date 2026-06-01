@@ -1,5 +1,6 @@
-#include "LinkedList.hpp"     // 包含您的鏈結串列實現
-#include "../TestFramework.h" // 包含單元測試框架
+#include "LinkedList.hpp"
+#include "DoublyLinkedList.hpp"
+#include "../TestFramework.h"
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -92,12 +93,69 @@ TEST_EQUAL(2, assigned.getSize(), "Assigned size must remain 2");
 TEST_EQUAL(2, assigned.get(0), "Assigned data must remain 2 (Copy-and-Swap check)");
 END_SUITE
 
+TEST_SUITE(LinkedList_Back_Operations_Test)
+LinkedList<int> ll;
+ll.push_back(10);
+ll.push_back(20);
+ll.push_back(30);
+
+TEST_EQUAL(3, ll.getSize(), "Size after push_back");
+TEST_EQUAL(10, ll.get(0), "Get 1st element");
+TEST_EQUAL(20, ll.get(1), "Get 2nd element");
+TEST_EQUAL(30, ll.get(2), "Get 3rd element");
+
+TEST_EQUAL(30, ll.pop_back(), "Pop back (should be 30)");
+TEST_EQUAL(2, ll.getSize(), "Size after 1 pop_back");
+TEST_EQUAL(20, ll.pop_back(), "Pop back (should be 20)");
+TEST_EQUAL(10, ll.pop_back(), "Pop back (should be 10)");
+TEST_EQUAL(true, ll.isEmpty(), "Empty after all pop_backs");
+END_SUITE
+
+TEST_SUITE(DoublyLinkedList_Test)
+DoublyLinkedList<int> dll;
+dll.push_back(10);
+dll.push_back(20);
+dll.push_front(5); // [5 -> 10 -> 20]
+
+TEST_EQUAL(3, dll.getSize(), "DLL size");
+TEST_EQUAL(5, dll.get(0), "DLL get 0");
+TEST_EQUAL(10, dll.get(1), "DLL get 1");
+TEST_EQUAL(20, dll.get(2), "DLL get 2");
+
+// Test bidirectional navigation
+TEST_EQUAL(20, dll.get_from_back(0), "DLL back index 0");
+TEST_EQUAL(10, dll.get_from_back(1), "DLL back index 1");
+TEST_EQUAL(5, dll.get_from_back(2), "DLL back index 2");
+
+// Test pop_front dangling pointer issue fix
+TEST_EQUAL(5, dll.pop_front(), "DLL pop front");
+TEST_EQUAL(2, dll.getSize(), "DLL size after pop front");
+TEST_EQUAL(10, dll.get(0), "DLL get 0 after pop front");
+
+// Test Deep Copy Constructor
+DoublyLinkedList<int> dll_copy(dll);
+TEST_EQUAL(2, dll_copy.getSize(), "DLL Copy size");
+TEST_EQUAL(20, dll_copy.get_from_back(0), "DLL Copy back navigation");
+TEST_EQUAL(10, dll_copy.get_from_back(1), "DLL Copy back navigation index 1");
+
+dll_copy.push_back(30);
+TEST_EQUAL(2, dll.getSize(), "DLL original isolated from copy push_back");
+
+// Test Copy Assignment
+DoublyLinkedList<int> dll_assigned;
+dll_assigned = dll;
+TEST_EQUAL(2, dll_assigned.getSize(), "DLL Assigned size");
+TEST_EQUAL(20, dll_assigned.get_from_back(0), "DLL Assigned back navigation");
+END_SUITE
+
 // ==========================================================
 void run_all_tests()
 {
     LinkedList_Core_Logic_Test();
     LinkedList_Edge_Cases_Test();
     LinkedList_Resource_Management_Test();
+    LinkedList_Back_Operations_Test();
+    DoublyLinkedList_Test();
 }
 
 int main()

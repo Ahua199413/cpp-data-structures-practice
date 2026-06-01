@@ -8,6 +8,32 @@ DynamicArray::~DynamicArray()
     delete[] data;
 }
 
+DynamicArray::DynamicArray(const DynamicArray &other)
+    : data(new int[other.capacity]), capacity(other.capacity), length(other.length)
+{
+    for (int i = 0; i < length; ++i)
+    {
+        data[i] = other.data[i];
+    }
+}
+
+DynamicArray &DynamicArray::operator=(const DynamicArray &other)
+{
+    if (this != &other)
+    {
+        int *newData = new int[other.capacity];
+        for (int i = 0; i < other.length; ++i)
+        {
+            newData[i] = other.data[i];
+        }
+        delete[] data;
+        data = newData;
+        capacity = other.capacity;
+        length = other.length;
+    }
+    return *this;
+}
+
 void DynamicArray::resize(int newCap)
 {
     int *newData = new int[newCap];

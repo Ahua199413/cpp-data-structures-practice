@@ -2,17 +2,18 @@
 #include <iostream>
 #include <stdexcept>
 #include <algorithm> // for std::swap
+
 // ==========================================================
-// 1. 節點 (Node) 結構
+// 1. 節點 (DoublyNode) 結構
 // ==========================================================
 template <typename T>
-struct Node
+struct DoublyNode
 {
     T data;
-    Node<T> *next;
-    Node<T> *prev;
+    DoublyNode<T> *next;
+    DoublyNode<T> *prev;
 
-    Node(T val) : data(val), next(nullptr), prev(nullptr) {}
+    DoublyNode(T val) : data(val), next(nullptr), prev(nullptr) {}
 };
 
 // ==========================================================
@@ -22,17 +23,17 @@ template <typename T>
 class DoublyLinkedList
 {
 private:
-    Node<T> *head_;
-    Node<T> *tail_;
+    DoublyNode<T> *head_;
+    DoublyNode<T> *tail_;
     size_t size_;
 
     // 內部輔助函式：清理所有節點
     void clear_internal()
     {
-        Node<T> *current = head_;
+        DoublyNode<T> *current = head_;
         while (current != nullptr)
         {
-            Node<T> *next_node = current->next;
+            DoublyNode<T> *next_node = current->next;
             delete current;
             current = next_node;
         }
@@ -51,23 +52,26 @@ public:
     }
 
     // 複製構造函式 (Deep Copy)
-    DoublyLinkedList(const DoublyLinkedList &other) : head_(nullptr), size_(0)
+    DoublyLinkedList(const DoublyLinkedList &other) : head_(nullptr), tail_(nullptr), size_(0)
     {
         if (other.head_ == nullptr)
             return;
 
-        // 1. 複製節點
-        head_ = new Node<T>(other.head_->data);
-        Node<T> *current_new = head_;
-        Node<T> *current_other = other.head_->next;
+        // 1. 複製第一個節點
+        head_ = new DoublyNode<T>(other.head_->data);
+        DoublyNode<T> *current_new = head_;
+        DoublyNode<T> *current_other = other.head_->next;
 
-        // 2. 依序複製其他節點
+        // 2. 依序複製其他節點並建立雙向連結
         while (current_other != nullptr)
         {
-            current_new->next = new Node<T>(current_other->data);
-            current_new = current_new->next;
+            DoublyNode<T> *newNode = new DoublyNode<T>(current_other->data);
+            current_new->next = newNode;
+            newNode->prev = current_new;
+            current_new = newNode;
             current_other = current_other->next;
         }
+        tail_ = current_new;
         size_ = other.size_;
     }
 
@@ -80,6 +84,7 @@ public:
             DoublyLinkedList temp(other);
             // 2. 交換內容
             std::swap(this->head_, temp.head_);
+            std::swap(this->tail_, temp.tail_);
             std::swap(this->size_, temp.size_);
         }
         return *this;
@@ -91,7 +96,7 @@ public:
     // insert at the front O(1)
     void push_front(const T &data)
     {
-        Node<T> *newNode = new Node<T>(data);
+        DoublyNode<T> *newNode = new DoublyNode<T>(data);
         if (isEmpty())
         {
             head_ = newNode;
@@ -106,10 +111,10 @@ public:
         size_++;
     }
 
-    // instert at the back O(n)
+    // insert at the back O(1)
     void push_back(const T &data)
     {
-        Node<T> *newNode = new Node<T>(data);
+        DoublyNode<T> *newNode = new DoublyNode<T>(data);
         if (isEmpty())
         {
             head_ = tail_ = newNode;
@@ -129,7 +134,7 @@ public:
         if (isEmpty())
             throw std::out_of_range("List is empty.");
 
-        Node<T> *temp = head_;
+        DoublyNode<T> *temp = head_;
         T val = head_->data;
         head_ = head_->next;
 
@@ -137,19 +142,25 @@ public:
         size_--;
 
         if (isEmpty())
+        {
             tail_ = nullptr;
+        }
+        else
+        {
+            head_->prev = nullptr;
+        }
 
         return val;
     }
 
-    // remove from the back O(n)
+    // remove from the back O(1)
     T pop_back()
     {
         if (isEmpty())
             throw std::out_of_range("List is empty.");
 
         T val = tail_->data;
-        Node<T> *oldTail = tail_;
+        DoublyNode<T> *oldTail = tail_;
 
         if (size_ == 1)
         {
@@ -172,7 +183,7 @@ public:
         if (index >= size_)
             throw std::out_of_range("Index out of range.");
 
-        Node<T> *current = head_;
+        DoublyNode<T> *current = head_;
         for (size_t i = 0; i < index; i++)
         {
             current = current->next;
@@ -189,7 +200,7 @@ public:
     {
         if (index_from_tail >= size_)
             throw std::out_of_range("Index out of bounds");
-        Node<T> *current = tail_;
+        DoublyNode<T> *current = tail_;
         for (size_t i = 0; i < index_from_tail; ++i)
         {
             current = current->prev; // 往回走！
