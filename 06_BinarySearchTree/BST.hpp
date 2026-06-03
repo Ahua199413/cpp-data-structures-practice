@@ -11,11 +11,11 @@ template <typename T>
 struct BSTNode
 {
     T data;
-    BSTNode<T> *left;
-    BSTNode<T> *right;
+    BSTNode* left;
+    BSTNode* right;
 
     BSTNode(T val) : data(val), left(nullptr), right(nullptr) {}
-};
+}
 
 // ==========================================================
 // 2. 二元搜尋樹 (BST) 類別
@@ -24,29 +24,29 @@ template <typename T>
 class BST
 {
 private:
-    BSTNode<T> *root_;
+    BSTNode<T> *root;
     size_t size_;
-
     // ------------------------------------------------------
     // 內部遞迴輔助函式 (Helper Functions)
     // ------------------------------------------------------
 
     // 遞迴複製整棵樹
-    BSTNode<T> *copy_helper(BSTNode<T> *node)
+    BSTNode<T> *copy_helper(BSTNode<T> *node) 
     {
-        if (node == nullptr)
+        if(node == nullptr)
             return nullptr;
 
         BSTNode<T> *newNode = new BSTNode<T>(node->data);
         newNode->left = copy_helper(node->left);
         newNode->right = copy_helper(node->right);
-        return newNode;
+        return newNode; 
     }
+        
 
     // 遞迴清理/釋放所有節點
     void clear_helper(BSTNode<T> *node)
     {
-        if (node == nullptr)
+        if(node == nullptr)
             return;
 
         clear_helper(node->left);
@@ -57,17 +57,16 @@ private:
     // 遞迴插入節點
     BSTNode<T> *insert_helper(BSTNode<T> *node, T value, bool &inserted)
     {
-        if (node == nullptr)
+        if(node == nullptr)
         {
             inserted = true;
             return new BSTNode<T>(value);
         }
-
-        if (value < node->data)
+        if(value < node->data)
         {
             node->left = insert_helper(node->left, value, inserted);
         }
-        else if (value > node->data)
+        else if(value > node->data)
         {
             node->right = insert_helper(node->right, value, inserted);
         }
@@ -82,45 +81,38 @@ private:
     // 遞迴搜尋值
     bool search_helper(BSTNode<T> *node, T value) const
     {
-        if (node == nullptr)
+        if(node == nullptr)
             return false;
-
-        if (value == node->data)
+        if(value == node->data)
             return true;
-        else if (value < node->data)
+        if(value < node->data)
             return search_helper(node->left, value);
-        else
-            return search_helper(node->right, value);
+        return search_helper(node->right, value);
     }
 
     // 尋找給定子樹的最小值節點 (用於刪除操作中的替代)
     BSTNode<T> *find_min(BSTNode<T> *node) const
     {
-        if (node == nullptr)
+        if(node == nullptr)
             return nullptr;
-        
-        BSTNode<T> *current = node;
-        while (current->left != nullptr)
-        {
-            current = current->left;
-        }
-        return current;
+        while(node->left != nullptr)
+            node = node->left;
+        return node;
     }
 
     // 遞迴刪除節點
     BSTNode<T> *remove_helper(BSTNode<T> *node, T value, bool &removed)
     {
-        if (node == nullptr)
+        if(node == nullptr)
         {
             removed = false;
             return nullptr;
         }
-
-        if (value < node->data)
+        if(value < node->data)
         {
             node->left = remove_helper(node->left, value, removed);
         }
-        else if (value > node->data)
+        else if(value > node->data)
         {
             node->right = remove_helper(node->right, value, removed);
         }
@@ -128,21 +120,19 @@ private:
         {
             // 找到要刪除的節點了！
             removed = true;
-
             // 情況 1 & 2: 沒有子節點，或只有單一子節點
-            if (node->left == nullptr)
+            if(node->left == nullptr)
             {
                 BSTNode<T> *temp = node->right;
                 delete node;
                 return temp;
             }
-            else if (node->right == nullptr)
+            else if(node->right == nullptr)
             {
                 BSTNode<T> *temp = node->left;
                 delete node;
                 return temp;
             }
-
             // 情況 3: 有兩個子節點
             // 找出右子樹中的最小值節點 (Inorder Successor) 來替代
             BSTNode<T> *temp = find_min(node->right);
@@ -153,11 +143,10 @@ private:
         }
         return node;
     }
-
     // 遞迴中序走訪 (Inorder: 左 -> 根 -> 右) - 結果會是遞增排序的
     void inorder_helper(BSTNode<T> *node, std::vector<T> &result) const
     {
-        if (node == nullptr)
+        if(node == nullptr)
             return;
         inorder_helper(node->left, result);
         result.push_back(node->data);
@@ -167,23 +156,21 @@ private:
     // 遞迴前序走訪 (Preorder: 根 -> 左 -> 右)
     void preorder_helper(BSTNode<T> *node, std::vector<T> &result) const
     {
-        if (node == nullptr)
+        if(node == nullptr)
             return;
         result.push_back(node->data);
         preorder_helper(node->left, result);
         preorder_helper(node->right, result);
     }
-
     // 遞迴後序走訪 (Postorder: 左 -> 右 -> 根)
-    void postorder_helper(BSTNode<T> *node, std::vector<T> &result) const
+    void postorder_helper(BSTNode<T> *node, std::vector<T> &result) 
     {
-        if (node == nullptr)
+        if(node == nullptr)
             return;
         postorder_helper(node->left, result);
         postorder_helper(node->right, result);
         result.push_back(node->data);
     }
-
 public:
     // 構造函式
     BST() : root_(nullptr), size_(0) {}
