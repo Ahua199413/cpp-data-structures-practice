@@ -20,6 +20,23 @@ std::string vector_to_string(const std::vector<T> &vec)
     return s;
 }
 
+// 輔助函式：將 2D vector (Level Order) 轉為字串便於比對
+template <typename T>
+std::string level_order_to_string(const std::vector<std::vector<T>> &levels)
+{
+    std::string s = "[";
+    for (size_t i = 0; i < levels.size(); ++i)
+    {
+        s += vector_to_string(levels[i]);
+        if (i != levels.size() - 1)
+        {
+            s += ", ";
+        }
+    }
+    s += "]";
+    return s;
+}
+
 // ==========================================================
 // 測試套件 1: 插入與基本屬性
 // ==========================================================
@@ -155,12 +172,49 @@ TEST_EQUAL(3, assigned.size(), "Assigned size remains 3");
 TEST_EQUAL(true, assigned.search(75), "Assigned still contains 75");
 END_SUITE
 
+// ==========================================================
+// 測試套件 5: 進階演算法 (高度、平衡判定與層序走訪)
+// ==========================================================
+TEST_SUITE(BST_Advanced_Algorithms_Test)
+// 1. 空樹測試
+BST<int> empty_tree;
+TEST_EQUAL(0, empty_tree.height(), "Empty tree height is 0");
+TEST_EQUAL(true, empty_tree.isBalanced(), "Empty tree is balanced");
+TEST_EQUAL(std::string("[]"), level_order_to_string(empty_tree.levelOrder()), "Empty tree level order");
+
+// 2. 平衡樹測試
+BST<int> bst;
+bst.insert(50);
+bst.insert(30);
+bst.insert(70);
+bst.insert(20);
+bst.insert(40);
+bst.insert(60);
+bst.insert(80);
+
+TEST_EQUAL(3, bst.height(), "Balanced tree height is 3");
+TEST_EQUAL(true, bst.isBalanced(), "Balanced tree check");
+TEST_EQUAL(std::string("[[50], [30, 70], [20, 40, 60, 80]]"), level_order_to_string(bst.levelOrder()), "Balanced tree level order");
+
+// 3. 非平衡樹測試
+BST<int> skewed;
+skewed.insert(10);
+skewed.insert(20);
+skewed.insert(30);
+skewed.insert(40);
+
+TEST_EQUAL(4, skewed.height(), "Skewed tree height is 4");
+TEST_EQUAL(false, skewed.isBalanced(), "Skewed tree is unbalanced");
+TEST_EQUAL(std::string("[[10], [20], [30], [40]]"), level_order_to_string(skewed.levelOrder()), "Skewed tree level order");
+END_SUITE
+
 void run_all_tests()
 {
     BST_Insertion_And_Search_Test();
     BST_Traversal_Test();
     BST_Deletion_Test();
     BST_Resource_Management_Test();
+    BST_Advanced_Algorithms_Test();
 }
 
 int main()

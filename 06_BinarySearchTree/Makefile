@@ -9,7 +9,7 @@ TARGET = bst_test
 # 定義需要編譯的原始碼檔案
 SRCS = main.cpp
 OBJS = $(SRCS:.cpp=.o)
-HEADERS = BST.hpp ../TestFramework.h
+HEADERS = BST.hpp ../TestFramework.h ../04_Queue/Queue.hpp ../02_LinkedList/LinkedList.hpp
 
 # 預設目標：編譯所有物件檔並連結成 TARGET
 $(TARGET): $(OBJS)
