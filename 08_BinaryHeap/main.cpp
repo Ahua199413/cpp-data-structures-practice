@@ -1,4 +1,5 @@
 #include "BinaryHeap.hpp"
+#include "PriorityQueue.hpp"
 #include "../TestFramework.h"
 #include <stdexcept>
 

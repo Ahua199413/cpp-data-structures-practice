@@ -2,11 +2,14 @@
 #include <vector>
 #include <stdexcept>
 #include <algorithm> // for std::swap
+#include <functional>
 
-template <typename T>
+
+template <typename T, typename Compare = std::less<T>>
 class BinaryHeap {
 private:
     std::vector<T> heap_;
+    Compare comp_;
 
     // 索引計算輔助函式
     inline int parent(int i) const {return (i - 1) / 2;}
@@ -16,7 +19,7 @@ private:
     // 上浮操作 (Sift Up)
     void siftUp(int i) {
         // 當前節點不是根節點，且當前節點值大於其父節點值時，持續上浮
-        while (i > 0 && heap_[i] > heap_[parent(i)]) {
+        while (i > 0 && comp_(heap_[parent(i)], heap_[i])) {
             std::swap(heap_[i], heap_[parent(i)]);
             i = parent(i);
         }
@@ -24,14 +27,15 @@ private:
 
     // 新增 static 版本的 siftDown，支援自訂 vector 和大小限制
     static void siftDownStatic(std::vector<T>& vec, int i, int heapSize) {
+        Compare comp;
         int l = 2 * i + 1;
         int r = 2 * i + 2;
         int maxIndex = i;
         
-        if (l < heapSize && vec[l] > vec[maxIndex]) {
+        if (l < heapSize && comp(vec[maxIndex], vec[l])) {
             maxIndex = l;
         }
-        if (r < heapSize && vec[r] > vec[maxIndex]) {
+        if (r < heapSize && comp(vec[maxIndex], vec[r])) {
             maxIndex = r;
         }
         if (maxIndex != i) {
