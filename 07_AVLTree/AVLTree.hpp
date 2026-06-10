@@ -216,7 +216,7 @@ private:
     }
 
     // 中序走訪輔助函式
-    void inorder_helper(AVLNode<T>* node, vector<T>& result) const {
+    void inorder_helper(AVLNode<T>* node, std::vector<T>& result) const {
         if (node == nullptr) return;
         inorder_helper(node->left, result);
         result.push_back(node->data);
@@ -282,13 +282,13 @@ public:
 
     // 中序走訪
     vector<T> inorder() const {
-        vector<T> result;
+        std::vector<T> result;
         inorder_helper(root, result);
         return result;
     }
     
     // 層序走訪 (Level-Order) — 驗證樹的立體結構是否平衡的關鍵
-    vector<vector<T>> levelOrder() const {
+    std::vector<std::vector<T>> levelOrder() const {
         vector<vector<T>> result;
         if (root == nullptr) return result;
         Queue<AVLNode<T>*> q;
