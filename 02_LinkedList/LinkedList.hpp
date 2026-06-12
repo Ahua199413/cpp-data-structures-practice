@@ -11,9 +11,8 @@ struct SinglyNode
 {
     T data;
     SinglyNode<T> *next;
-    SinglyNode<T> *prev;
 
-    SinglyNode(T val) : data(val), next(nullptr), prev(nullptr) {}
+    SinglyNode(T val) : data(val), next(nullptr) {}
 };
 
 // ==========================================================
@@ -51,26 +50,20 @@ public:
         clear_internal();
     }
 
-    // 複製構造函式 (Deep Copy)
     LinkedList(const LinkedList &other) : head_(nullptr), tail_(nullptr), size_(0)
     {
-        if (other.head_ == nullptr)
-            return;
-
-        // 1. 複製節點
-        head_ = new SinglyNode<T>(other.head_->data);
-        SinglyNode<T> *current_new = head_;
-        SinglyNode<T> *current_other = other.head_->next;
-
-        // 2. 依序複製其他節點
-        while (current_other != nullptr)
+        try
         {
-            current_new->next = new SinglyNode<T>(current_other->data);
-            current_new = current_new->next;
-            current_other = current_other->next;
+            for (SinglyNode<T> *curr = other.head_; curr != nullptr; curr = curr->next)
+            {
+                push_back(curr->data);
+            }
         }
-        tail_ = current_new;
-        size_ = other.size_;
+        catch (...)
+        {
+            clear_internal();
+            throw;
+        }
     }
 
     // 複製賦值運算符 (Copy-and-Swap idiom)

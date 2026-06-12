@@ -33,15 +33,23 @@ private:
     // 內部遞迴輔助函式 (Helper Functions)
     // ------------------------------------------------------
 
-    // 遞迴複製整棵樹
     BSTNode<T> *copy_helper(BSTNode<T> *node) 
     {
         if (node == nullptr)
             return nullptr;
 
         BSTNode<T> *newNode = new BSTNode<T>(node->data);
-        newNode->left = copy_helper(node->left);
-        newNode->right = copy_helper(node->right);
+        try
+        {
+            newNode->left = copy_helper(node->left);
+            newNode->right = copy_helper(node->right);
+        }
+        catch (...)
+        {
+            clear_helper(newNode->left);
+            delete newNode;
+            throw;
+        }
         return newNode; 
     }
 

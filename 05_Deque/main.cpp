@@ -25,7 +25,7 @@ dq.push_back(10);  // [10]
 dq.push_front(20); // [20, 10]
 dq.push_back(30);  // [20, 10, 30]
 
-// TEST_EQUAL(20, dq.front(), "Check front");
+TEST_EQUAL(20, dq.front(), "Check front");
 TEST_EQUAL(30, dq.back(), "Check back");
 
 TEST_EQUAL(20, dq.pop_front(), "Pop front"); // 剩下 [10, 30]

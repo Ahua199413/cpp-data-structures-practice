@@ -15,7 +15,7 @@ public:
     // --- 前端操作 ---
     void push_front(const T &val) { storage_.push_front(val); }
     T pop_front() { return storage_.pop_front(); }
-    // const T &front() const { return storage_.get_from_front(0); } // 假設 DLL 有提供 get_from_front
+    const T &front() const { return storage_.get(0); }
 
     // --- 後端操作 ---
     void push_back(const T &val) { storage_.push_back(val); }

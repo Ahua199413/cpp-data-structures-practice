@@ -54,25 +54,18 @@ public:
     // 複製構造函式 (Deep Copy)
     DoublyLinkedList(const DoublyLinkedList &other) : head_(nullptr), tail_(nullptr), size_(0)
     {
-        if (other.head_ == nullptr)
-            return;
-
-        // 1. 複製第一個節點
-        head_ = new DoublyNode<T>(other.head_->data);
-        DoublyNode<T> *current_new = head_;
-        DoublyNode<T> *current_other = other.head_->next;
-
-        // 2. 依序複製其他節點並建立雙向連結
-        while (current_other != nullptr)
+        try
         {
-            DoublyNode<T> *newNode = new DoublyNode<T>(current_other->data);
-            current_new->next = newNode;
-            newNode->prev = current_new;
-            current_new = newNode;
-            current_other = current_other->next;
+            for (DoublyNode<T> *curr = other.head_; curr != nullptr; curr = curr->next)
+            {
+                push_back(curr->data);
+            }
         }
-        tail_ = current_new;
-        size_ = other.size_;
+        catch (...)
+        {
+            clear_internal();
+            throw;
+        }
     }
 
     // 複製賦值運算符 (Copy-and-Swap idiom)

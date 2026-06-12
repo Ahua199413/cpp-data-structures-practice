@@ -1,5 +1,6 @@
 #include "DynamicArray.hpp"
 #include <stdexcept>
+#include <utility>
 
 DynamicArray::DynamicArray() : data(new int[2]), capacity(2), length(0) {}
 
@@ -21,15 +22,10 @@ DynamicArray &DynamicArray::operator=(const DynamicArray &other)
 {
     if (this != &other)
     {
-        int *newData = new int[other.capacity];
-        for (int i = 0; i < other.length; ++i)
-        {
-            newData[i] = other.data[i];
-        }
-        delete[] data;
-        data = newData;
-        capacity = other.capacity;
-        length = other.length;
+        DynamicArray temp(other);
+        std::swap(data, temp.data);
+        std::swap(capacity, temp.capacity);
+        std::swap(length, temp.length);
     }
     return *this;
 }

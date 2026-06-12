@@ -24,8 +24,14 @@ private:
     AVLNode<T>* copy_helper(AVLNode<T>* node) {
         if (node == nullptr)    return nullptr;
         AVLNode<T>* newNode = new AVLNode<T>(node->data);
-        newNode->left = copy_helper(node->left);
-        newNode->right = copy_helper(node->right);
+        try {
+            newNode->left = copy_helper(node->left);
+            newNode->right = copy_helper(node->right);
+        } catch (...) {
+            clear_helper(newNode->left);
+            delete newNode;
+            throw;
+        }
         newNode->height = node->height;
         return newNode;
     }
@@ -281,7 +287,7 @@ public:
     }
 
     // 中序走訪
-    vector<T> inorder() const {
+    std::vector<T> inorder() const {
         std::vector<T> result;
         inorder_helper(root, result);
         return result;
@@ -289,7 +295,7 @@ public:
     
     // 層序走訪 (Level-Order) — 驗證樹的立體結構是否平衡的關鍵
     std::vector<std::vector<T>> levelOrder() const {
-        vector<vector<T>> result;
+        std::vector<std::vector<T>> result;
         if (root == nullptr) return result;
         Queue<AVLNode<T>*> q;
         q.enqueue(root);

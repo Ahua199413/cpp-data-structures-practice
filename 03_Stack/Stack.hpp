@@ -63,8 +63,13 @@ public:
         // 現在我們需要以 FIFO 順序 (最舊->最新) 重新 push 到新堆疊中，才能正確複製
         std::reverse(elements.begin(), elements.end());
 
-        for (const T& val : elements) {
-            push(val); 
+        try {
+            for (const T& val : elements) {
+                push(val); 
+            }
+        } catch (...) {
+            clear_internal();
+            throw;
         }
     }
 

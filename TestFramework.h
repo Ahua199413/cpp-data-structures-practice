@@ -12,11 +12,11 @@
 #define ANSI_COLOR_RESET "\x1b[0m"   // 重置顏色 (必須加在結尾)
 // ==========================================================
 // 全域計數器
-static int g_tests_run = 0;
-static int g_tests_failed = 0;
+inline int g_tests_run = 0;
+inline int g_tests_failed = 0;
 
 // 測試套件名稱
-static std::string g_current_suite = "";
+inline std::string g_current_suite = "";
 
 // 測試比較巨集 (保持不變)
 #define TEST_EQUAL(expected, actual, test_name)                                     \
