@@ -49,6 +49,10 @@ public:
 // ----------------------------------------------------------------
 template <typename K, typename V, typename Hash>
 bool HashTable<K, V, Hash>::insert(const K& key, const V& value) {
+    // 啟用自動擴容
+    if (loadFactor() >= max_load_factor_) { 
+        rehash(); 
+    }
     size_t index = getIndex(key);
     size_t i = index;
     int first_deleted_idx = -1; // 記錄第一個看到的 DELETED 位址
@@ -117,4 +121,22 @@ bool HashTable<K, V, Hash>::remove(const K& key) {
         i = (i + 1) % table_.size();
     } while (i != index);
     return false;
+}
+
+template <typename K, typename V, typename Hash>
+void HashTable<K, V, Hash>::rehash() {
+    std::vector<Entry> oldTable = table_;
+    size_t newCapacity = table_.size() * 2;
+    
+    // 1. 初始化一個兩倍大的全新 vector (狀態預設皆為 EMPTY)
+    table_ = std::vector<Entry>(newCapacity);
+
+    // 2. 重置 size_，因為下面的 insert() 會重新把 size_ 加回去
+    size_ = 0;
+    // 3. 將舊表中所有有效資料重新 insert
+    for (const auto& entry : oldTable) {
+        if (entry.state == OCCUPIED) {
+            insert(entry.key, entry.value);
+        }
+    }
 }

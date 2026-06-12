@@ -54,9 +54,30 @@ TEST_SUITE(HashTable_Collision_And_Tombstone)
     TEST_EQUAL(40, val, "D value check");
 END_SUITE
 
+TEST_SUITE(HashTable_Rehash_Test)
+    // 預設容量為 8，max_load_factor = 0.7，意味著插入到第 6 個元素時 (6/8 = 0.75 >= 0.7) 就會觸發擴容
+    HashTable<int, std::string> ht(8, 0.7);
+    for (int i = 0; i < 20; ++i) {
+        ht.insert(i, "val_" + std::to_string(i));
+    }
+    TEST_EQUAL(20, ht.size(), "Size after rehashing multiple times");
+    TEST_EQUAL(true, ht.loadFactor() < 0.7, "Load factor should be restored to < 0.7");
+    // 確認所有元素在擴容後依然可以被搜尋到
+    bool all_found = true;
+    std::string val;
+    for (int i = 0; i < 20; ++i) {
+        if (!ht.search(i, val) || val != ("val_" + std::to_string(i))) {
+            all_found = false;
+            break;
+        }
+    }
+    TEST_EQUAL(true, all_found, "All elements found after rehash");
+END_SUITE
+
 void run_all_tests() {
     HashTable_Core_Operations();
     HashTable_Collision_And_Tombstone();
+    HashTable_Rehash_Test();
 }
 int main() {
     run_all_tests();
