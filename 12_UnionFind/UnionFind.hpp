@@ -19,7 +19,7 @@ public:
     // 核心方法 1：尋找頂點 i 的根節點 (老大)
     // 包含神級優化：路徑壓縮 (Path Compression)
     int find(int i) {
-        if (i < 0 || i >= parent_.size())
+        if (i < 0 || static_cast<size_t>(i) >= parent_.size())
             throw std::out_of_range("Index out of range.");
 
         // 如果我自己不是老大，就去問我的老大是誰
